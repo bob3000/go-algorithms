@@ -1,13 +1,8 @@
 package avl
 
-import (
-	"fmt"
-)
-
 type node struct {
 	key                 int
 	value               interface{}
-	isLeftChild         bool
 	parent, left, right *node
 }
 
@@ -44,7 +39,6 @@ func (a *Avl) Add(key int, value interface{}) {
 	n := &node{
 		key,
 		value,
-		false,
 		nil, nil, nil,
 	}
 	a.size++
@@ -64,7 +58,6 @@ func add(parent, newNode *node) {
 		if parent.right == nil {
 			parent.right = newNode
 			newNode.parent = parent
-			newNode.isLeftChild = false
 		} else {
 			add(parent.right, newNode)
 		}
@@ -72,7 +65,6 @@ func add(parent, newNode *node) {
 		if parent.left == nil {
 			parent.left = newNode
 			newNode.parent = parent
-			newNode.isLeftChild = true
 		} else {
 			add(parent.left, newNode)
 		}
@@ -89,82 +81,65 @@ func (a *Avl) isBalanced() bool {
 }
 
 func (a *Avl) rotateLeft(n *node) {
-	fmt.Println("rotate left")
-	// update right child
 	tmp := n.right
+	// tmp left subtree
 	n.right = tmp.left
-	tmp.left = n
-	if n.right != nil {
-		n.right.parent = n
-		n.right.isLeftChild = false
+	if tmp.left != nil {
+		tmp.left.parent = n
 	}
-	// we are the root node
-	if n.parent == nil {
-		a.root = tmp
-		tmp.parent = nil
-		return
-	}
-	// we are not the root node
+	// tmp
 	tmp.parent = n.parent
-	if n.isLeftChild {
-		tmp.isLeftChild = true
+	if tmp.parent == nil {
+		a.root = tmp
+	} else if tmp.parent.left == n {
 		tmp.parent.left = tmp
 	} else {
-		tmp.isLeftChild = false
 		tmp.parent.right = tmp
 	}
-	n.isLeftChild = true
+	tmp.left = n
 	n.parent = tmp
 }
 
 func (a *Avl) rotateRight(n *node) {
-	fmt.Println("rotate right")
-	// update left child
 	tmp := n.left
+	// tmp left subtree
 	n.left = tmp.right
-	tmp.right = n
-	if n.left != nil {
-		n.left.parent = n
-		n.left.isLeftChild = true
+	if tmp.right != nil {
+		tmp.right.parent = n
 	}
-	// we are the root node
-	if n.parent == nil {
-		a.root = tmp
-		tmp.parent = nil
-		return
-	}
-	// we are not the root node
+	// tmp
 	tmp.parent = n.parent
-	if n.isLeftChild {
-		tmp.isLeftChild = true
-		tmp.parent.left = tmp
-	} else {
-		tmp.isLeftChild = false
+	if tmp.parent == nil {
+		a.root = tmp
+	} else if tmp.parent.right == n {
 		tmp.parent.right = tmp
+	} else {
+		tmp.parent.left = tmp
 	}
 	tmp.right = n
-	n.isLeftChild = false
 	n.parent = tmp
 }
 
 func (a *Avl) rotate(n *node) {
-	if n.isLeftChild {
-		if n.parent.isLeftChild {
+	if n.parent.left == n {
+		if n.parent.parent.left != nil &&
+			n.parent.parent.left.left == n {
 			// right rotate
 			a.rotateRight(n.parent.parent)
 		} else {
 			// right left rotate
 			a.rotateRight(n.parent.parent.right)
-			a.rotateLeft(n.parent.parent)
+			a.rotateLeft(n.parent)
 		}
 	} else {
-		if !n.isLeftChild {
+		if n.parent.parent.right != nil &&
+			n.parent.parent.right.right == n {
 			// left rotate
 			a.rotateLeft(n.parent.parent)
 		} else {
 			// left right rotate
-			a.rotateRight(n.parent.parent.left)
-			a.rotateLeft(n.parent.parent)
+			a.rotateLeft(n.parent.parent.left)
+			a.rotateRight(n.parent)
 		}
 	}
 }

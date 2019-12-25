@@ -2,7 +2,7 @@ package avl
 
 import "testing"
 
-func TestAVL(t *testing.T) {
+func TestAdd(t *testing.T) {
 	t.Run("add", func(t *testing.T) {
 		a := New()
 		// root node
@@ -29,56 +29,85 @@ func TestAVL(t *testing.T) {
 		assert(t, a.root.right.left.key, 6)
 		assert(t, a.root.right.right.key, 8)
 	})
-	t.Run("right rotate", func(t *testing.T) {
-		a := New()
+}
+
+func TestRotateLeft(t *testing.T) {
+	a := New()
+	t.Run("rotation with root node involved", func(t *testing.T) {
 		a.Add(10, 10)
-		// check rotation with root node involved
-		for i := 9; i > 7; i-- {
-			a.Add(i, i)
-		}
-		assert(t, a.root.key, 9)
-		assert(t, a.root.left.key, 8)
-		assert(t, a.root.right.key, 10)
-		// check rotation with lower level parent nodes involved
-		for i := 7; i > 5; i-- {
-			a.Add(i, i)
-		}
-		assert(t, a.root.key, 9)
-		assert(t, a.root.left.key, 7)
-		assert(t, a.root.left.left.key, 6)
-		assert(t, a.root.left.right.key, 8)
-	})
-	t.Run("left rotate", func(t *testing.T) {
-		a := New()
-		// check rotation with root node involved
-		a.Add(10, 10)
-		for i := 11; i < 13; i++ {
-			a.Add(i, i)
-		}
+		a.Add(11, 11)
+		a.Add(12, 12)
 		assert(t, a.root.key, 11)
 		assert(t, a.root.left.key, 10)
 		assert(t, a.root.right.key, 12)
-		// check rotation with lower level parent nodes involved
-		for i := 13; i < 16; i++ {
-			a.Add(i, i)
-		}
+	})
+	t.Run("rotation with lower level parent nodes involved", func(t *testing.T) {
+		a.Add(13, 13)
+		a.Add(14, 14)
 		assert(t, a.root.key, 11)
-		assert(t, a.root.right.key, 14)
-		assert(t, a.root.right.left.key, 13)
-		assert(t, a.root.right.right.key, 15)
+		assert(t, a.root.right.key, 13)
+		assert(t, a.root.right.left.key, 12)
+		assert(t, a.root.right.right.key, 14)
 	})
-	t.Run("left right rotate", func(t *testing.T) {
-		// a := New()
-		// a.Add(20, 20)
-		// a.Add(9, 9)
-		// a.Add(10, 10)
-		// for i := 10; i < 13; i++ {
-		// 	a.Add(i, i)
-		// }
-		// assert(t, a.root.key, 9)
-	})
-	t.Run("right left rotate", func(t *testing.T) {
+}
 
+func TestRotateRight(t *testing.T) {
+	a := New()
+	t.Run("rotation with root node involved", func(t *testing.T) {
+		a.Add(12, 12)
+		a.Add(11, 11)
+		a.Add(10, 10)
+		assert(t, a.root.key, 11)
+		assert(t, a.root.left.key, 10)
+		assert(t, a.root.right.key, 12)
+	})
+	t.Run("rotation with lower level parent nodes involved", func(t *testing.T) {
+		a.Add(9, 9)
+		a.Add(8, 8)
+		assert(t, a.root.key, 11)
+		assert(t, a.root.left.key, 9)
+		assert(t, a.root.left.left.key, 8)
+		assert(t, a.root.left.right.key, 10)
+	})
+}
+
+func TestRotateLeftRight(t *testing.T) {
+	a := New()
+	t.Run("rotation with root node involved", func(t *testing.T) {
+		a.Add(12, 12)
+		a.Add(10, 10)
+		a.Add(11, 11)
+		assert(t, a.root.key, 11)
+		assert(t, a.root.left.key, 10)
+		assert(t, a.root.right.key, 12)
+	})
+	t.Run("rotation with lower level parent nodes involved", func(t *testing.T) {
+		a.Add(9, 9)
+		a.Add(8, 8)
+		assert(t, a.root.key, 11)
+		assert(t, a.root.left.key, 9)
+		assert(t, a.root.left.left.key, 8)
+		assert(t, a.root.left.right.key, 10)
+	})
+}
+
+func TestRotateRightLeft(t *testing.T) {
+	a := New()
+	t.Run("rotation with root node involved", func(t *testing.T) {
+		a.Add(10, 10)
+		a.Add(12, 12)
+		a.Add(11, 11)
+		assert(t, a.root.key, 11)
+		assert(t, a.root.left.key, 10)
+		assert(t, a.root.right.key, 12)
+	})
+	t.Run("rotation with lower level parent nodes involved", func(t *testing.T) {
+		a.Add(13, 13)
+		a.Add(14, 14)
+		assert(t, a.root.key, 11)
+		assert(t, a.root.right.key, 13)
+		assert(t, a.root.right.left.key, 12)
+		assert(t, a.root.right.right.key, 14)
 	})
 }
 

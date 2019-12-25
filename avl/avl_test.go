@@ -36,6 +36,22 @@ func TestAddFind(t *testing.T) {
 		assert(t, val.(int), 8)
 		_, val = a.Find(3)
 		assert(t, val.(int), 3)
+		_, val = a.Find(30)
+		assertNil(t, val)
+	})
+	t.Run("min", func(t *testing.T) {
+		_, val := a.Min()
+		assert(t, val.(int), 2)
+		b := New()
+		_, val = b.Min()
+		assertNil(t, val)
+	})
+	t.Run("max", func(t *testing.T) {
+		_, val := a.Max()
+		assert(t, val.(int), 8)
+		b := New()
+		_, val = b.Max()
+		assertNil(t, val)
 	})
 }
 
@@ -123,5 +139,12 @@ func assert(t *testing.T, one, two int) {
 	t.Helper()
 	if one != two {
 		t.Fatalf("assert failed %d != %d", one, two)
+	}
+}
+
+func assertNil(t *testing.T, val interface{}) {
+	t.Helper()
+	if val != nil {
+		t.Fatalf("%s should be nil", val)
 	}
 }

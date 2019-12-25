@@ -71,17 +71,59 @@ func add(parent, newNode *node) {
 	}
 }
 
+// Min returns the tree's minimum value
+func (a *Avl) Min() (bool, interface{}) {
+	ok, n := min(a.root)
+	if !ok {
+		return false, nil
+	}
+	return true, n.value
+}
+
+func min(n *node) (bool, *node) {
+	if n == nil {
+		return false, nil
+	} else if n.left == nil {
+		return true, n
+	} else {
+		return min(n.left)
+	}
+}
+
+// Max returns the tree's minimum value
+func (a *Avl) Max() (bool, interface{}) {
+	ok, n := max(a.root)
+	if !ok {
+		return false, nil
+	}
+	return true, n.value
+}
+
+func max(n *node) (bool, *node) {
+	if n == nil {
+		return false, nil
+	} else if n.right == nil {
+		return true, n
+	} else {
+		return max(n.right)
+	}
+}
+
 // Find returns the value of a given a key and a boolean value
 // indicating if the key was even found
 func (a *Avl) Find(key int) (bool, interface{}) {
-	return find(a.root, key)
+	ok, n := find(a.root, key)
+	if !ok {
+		return false, nil
+	}
+	return true, n.value
 }
 
-func find(n *node, keyToFind int) (bool, interface{}) {
+func find(n *node, keyToFind int) (bool, *node) {
 	if n == nil {
 		return false, nil
 	} else if n.key == keyToFind {
-		return true, n.value
+		return true, n
 	} else if n.key < keyToFind {
 		return find(n.right, keyToFind)
 	} else {

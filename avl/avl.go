@@ -71,6 +71,45 @@ func add(parent, newNode *node) {
 	}
 }
 
+// Remove the node with the given key and return it's value along with
+// a boolean which indicates if the removal was successful
+func (a *Avl) Remove(key int) (bool, interface{}) {
+	ok, n := remove(a.root, key)
+	if !ok {
+		return false, nil
+	}
+	return true, n.value
+}
+
+func remove(n *node, key int) (bool, *node) {
+	ok, n := find(n, key)
+	if !ok {
+		return ok, nil
+	}
+
+	var parentPointer **node
+	if isLeftChild := n.parent.left == n; isLeftChild {
+		parentPointer = &n.parent.left
+	} else {
+		parentPointer = &n.parent.right
+	}
+	if n.left == nil && n.right == nil {
+		*parentPointer = nil
+	} else if n.left == nil && n.right != nil {
+		*parentPointer = n.right
+		n.right.parent = *parentPointer
+	} else if n.left != nil && n.right == nil {
+		*parentPointer = n.left
+		n.left.parent = *parentPointer
+	} else {
+		_, m := min(n.right)
+		n.key, n.value = m.key, m.value
+		remove(m, key)
+	}
+	n.parent = nil
+	return true, n
+}
+
 // Min returns the tree's minimum value
 func (a *Avl) Min() (bool, interface{}) {
 	ok, n := min(a.root)

@@ -58,60 +58,28 @@ func TestAddFind(t *testing.T) {
 func TestRemove(t *testing.T) {
 	t.Run("remove leave node", func(t *testing.T) {
 		a := New()
-		// insert nodes avoiding rotations
-		a.Add(5, 5)
-		// create level 1 subtrees
-		a.Add(3, 3)
-		a.Add(7, 7)
+		insertTreeItems(t, &a, []int{5, 3, 7})
 		a.Remove(7)
 		_, val := a.Find(7)
 		assertNil(t, val)
 	})
 	t.Run("remove node with left subtree", func(t *testing.T) {
 		a := New()
-		// insert nodes avoiding rotations
-		a.Add(5, 5)
-		// create level 1 subtrees
-		a.Add(3, 3)
-		a.Add(7, 7)
-		// fill left subtree
-		a.Add(2, 2)
-		a.Add(4, 4)
-		// fill right subtree
-		a.Add(6, 6)
+		insertTreeItems(t, &a, []int{5, 3, 7, 2, 4, 6})
 		a.Remove(7)
 		_, val := a.Find(7)
 		assertNil(t, val)
 	})
 	t.Run("remove node with right subtree", func(t *testing.T) {
 		a := New()
-		// insert nodes avoiding rotations
-		a.Add(5, 5)
-		// create level 1 subtrees
-		a.Add(3, 3)
-		a.Add(7, 7)
-		// fill left subtree
-		a.Add(2, 2)
-		a.Add(4, 4)
-		// fill right subtree
-		a.Add(8, 8)
+		insertTreeItems(t, &a, []int{5, 3, 7, 2, 4, 8})
 		a.Remove(7)
 		_, val := a.Find(7)
 		assertNil(t, val)
 	})
 	t.Run("remove node with two subtrees", func(t *testing.T) {
 		a := New()
-		// insert nodes avoiding rotations
-		a.Add(5, 5)
-		// create level 1 subtrees
-		a.Add(3, 3)
-		a.Add(7, 7)
-		// fill left subtree
-		a.Add(2, 2)
-		a.Add(4, 4)
-		// fill right subtree
-		a.Add(6, 6)
-		a.Add(8, 8)
+		insertTreeItems(t, &a, []int{5, 3, 7, 2, 4, 6, 8})
 		a.Remove(3)
 		_, val := a.Find(3)
 		assertNil(t, val)
@@ -196,6 +164,13 @@ func TestRotateRightLeft(t *testing.T) {
 		assert(t, a.root.right.left.key, 12)
 		assert(t, a.root.right.right.key, 14)
 	})
+}
+
+func insertTreeItems(t *testing.T, a *Avl, it []int) {
+	t.Helper()
+	for i := range it {
+		a.Add(i, i)
+	}
 }
 
 func assert(t *testing.T, one, two int) {

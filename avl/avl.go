@@ -71,6 +71,24 @@ func add(parent, newNode *node) {
 	}
 }
 
+// Find returns the value of a given a key and a boolean value
+// indicating if the key was even found
+func (a *Avl) Find(key int) (bool, interface{}) {
+	return find(a.root, key)
+}
+
+func find(n *node, keyToFind int) (bool, interface{}) {
+	if n == nil {
+		return false, nil
+	} else if n.key == keyToFind {
+		return true, n.value
+	} else if n.key < keyToFind {
+		return find(n.right, keyToFind)
+	} else {
+		return find(n.left, keyToFind)
+	}
+}
+
 func (a *Avl) isBalanced() bool {
 	heightLeft := height(a.root.left)
 	heightRight := height(a.root.right)

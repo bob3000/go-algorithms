@@ -2,9 +2,9 @@ package avl
 
 import "testing"
 
-func TestAdd(t *testing.T) {
+func TestAddFind(t *testing.T) {
+	a := New()
 	t.Run("add", func(t *testing.T) {
-		a := New()
 		// root node
 		a.Add(5, 5)
 		// create level 1 subtrees
@@ -28,6 +28,14 @@ func TestAdd(t *testing.T) {
 		assert(t, a.root.right.key, 7)
 		assert(t, a.root.right.left.key, 6)
 		assert(t, a.root.right.right.key, 8)
+	})
+	t.Run("find", func(t *testing.T) {
+		_, val := a.Find(5)
+		assert(t, val.(int), 5)
+		_, val = a.Find(8)
+		assert(t, val.(int), 8)
+		_, val = a.Find(3)
+		assert(t, val.(int), 3)
 	})
 }
 
